@@ -1,0 +1,4 @@
+-- Correlated subqueries reference the outer query
+SELECT c.customer_id,c.lifetime_spend FROM core.customers c WHERE c.lifetime_spend>(SELECT coalesce(avg(o.order_total),0) FROM core.orders o WHERE o.customer_id=c.customer_id) ORDER BY c.lifetime_spend DESC LIMIT 100;
+SELECT p.product_id,cat.category_name,p.price FROM core.products p JOIN core.subcategories sc USING(subcategory_id) JOIN core.categories cat USING(category_id) WHERE p.price=(SELECT max(p2.price) FROM core.products p2 JOIN core.subcategories sc2 USING(subcategory_id) WHERE sc2.category_id=sc.category_id) ORDER BY cat.category_name;
+SELECT o.customer_id,o.order_id,o.order_total FROM core.orders o WHERE o.order_total>(SELECT avg(o2.order_total) FROM core.orders o2 WHERE o2.customer_id=o.customer_id) ORDER BY o.customer_id,o.order_total DESC LIMIT 100;

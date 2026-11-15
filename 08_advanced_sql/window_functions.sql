@@ -1,0 +1,7 @@
+-- Window functions: ROW_NUMBER, RANK, DENSE_RANK, SUM, AVG, LAG, FIRST_VALUE, LAST_VALUE
+SELECT customer_id,order_id,order_date,order_total,row_number() OVER(PARTITION BY customer_id ORDER BY order_date,order_id) AS customer_order_sequence FROM core.orders LIMIT 100;
+WITH sales AS (SELECT customer_id,sum(order_total) AS total_value FROM core.orders GROUP BY customer_id) SELECT customer_id,total_value,rank() OVER(ORDER BY total_value DESC) AS sales_rank,dense_rank() OVER(ORDER BY total_value DESC) AS dense_sales_rank FROM sales ORDER BY sales_rank LIMIT 100;
+SELECT customer_id,order_id,order_date,order_total,sum(order_total) OVER(PARTITION BY customer_id ORDER BY order_date,order_id ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS running_value FROM core.orders LIMIT 100;
+SELECT customer_id,order_id,order_total,avg(order_total) OVER(PARTITION BY customer_id) AS customer_avg,order_total-avg(order_total) OVER(PARTITION BY customer_id) AS difference_from_avg FROM core.orders LIMIT 100;
+SELECT customer_id,order_id,order_date,lag(order_date) OVER(PARTITION BY customer_id ORDER BY order_date,order_id) AS previous_order_date FROM core.orders LIMIT 100;
+SELECT customer_id,order_id,order_date,first_value(order_date) OVER(PARTITION BY customer_id ORDER BY order_date,order_id) AS first_order_date,last_value(order_date) OVER(PARTITION BY customer_id ORDER BY order_date,order_id ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS latest_order_date FROM core.orders LIMIT 100;

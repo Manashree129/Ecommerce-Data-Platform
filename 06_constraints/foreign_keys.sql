@@ -1,0 +1,25 @@
+-- Run after referential_integrity.sql reports zero orphan rows.
+ALTER TABLE core.subcategories ADD CONSTRAINT fk_subcategories_categories
+    FOREIGN KEY (category_id) REFERENCES core.categories (category_id);
+ALTER TABLE core.products ADD CONSTRAINT fk_products_subcategories
+    FOREIGN KEY (subcategory_id) REFERENCES core.subcategories (subcategory_id);
+ALTER TABLE core.sessions ADD CONSTRAINT fk_sessions_customers
+    FOREIGN KEY (customer_id) REFERENCES core.customers (customer_id);
+ALTER TABLE core.orders ADD CONSTRAINT fk_orders_customers
+    FOREIGN KEY (customer_id) REFERENCES core.customers (customer_id);
+ALTER TABLE core.orders ADD CONSTRAINT fk_orders_sessions
+    FOREIGN KEY (session_id) REFERENCES core.sessions (session_id);
+ALTER TABLE core.order_items ADD CONSTRAINT fk_order_items_orders
+    FOREIGN KEY (order_id) REFERENCES core.orders (order_id);
+ALTER TABLE core.order_items ADD CONSTRAINT fk_order_items_products
+    FOREIGN KEY (product_id) REFERENCES core.products (product_id);
+ALTER TABLE core.returns ADD CONSTRAINT fk_returns_orders
+    FOREIGN KEY (order_id) REFERENCES core.orders (order_id);
+ALTER TABLE core.returns ADD CONSTRAINT fk_returns_order_items
+    FOREIGN KEY (order_item_id) REFERENCES core.order_items (order_item_id);
+ALTER TABLE core.returns ADD CONSTRAINT fk_returns_products
+    FOREIGN KEY (product_id) REFERENCES core.products (product_id);
+ALTER TABLE core.support_tickets ADD CONSTRAINT fk_support_tickets_customers
+    FOREIGN KEY (customer_id) REFERENCES core.customers (customer_id);
+ALTER TABLE core.support_tickets ADD CONSTRAINT fk_support_tickets_orders
+    FOREIGN KEY (order_id) REFERENCES core.orders (order_id);

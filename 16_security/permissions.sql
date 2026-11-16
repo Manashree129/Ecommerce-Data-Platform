@@ -199,3 +199,15 @@ FROM information_schema.usage_privileges
 WHERE grantee = 'ecommerce_operations'
 AND object_schema = 'core'
 ORDER BY object_name;
+
+-- Allow operational triggers to write audit records.
+-- Do not grant UPDATE or DELETE on the audit table.
+GRANT USAGE ON SCHEMA audit
+TO ecommerce_operations;
+
+GRANT INSERT ON TABLE audit.row_change_log
+TO ecommerce_operations;
+
+GRANT USAGE, SELECT
+ON SEQUENCE audit.row_change_log_audit_id_seq
+TO ecommerce_operations;
